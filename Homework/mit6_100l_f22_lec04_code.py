@@ -1,3 +1,5 @@
+import random
+
 # mysum = 0
 # for i in range(5, 11, 2):
 #     mysum += i
@@ -19,6 +21,14 @@
 #for i in range(5):
     # your code here
 
+# mylist = [range(5), range(10), range(2,9,3), range(-4,6,2), range(5,6)]
+# for myrange in mylist:
+#     count = 0
+#     print(f"range: {myrange}")
+#     for i in myrange:
+#         if i%2 ==0 and i > 0:
+#             count +=1
+#     print(f"count of evens: {count}")
 
 #############################################
 
@@ -75,6 +85,12 @@
 # your code here
 s = 'abca'
 
+# unique_string = ""
+
+# for char in s:
+#     if char not in unique_string:
+#         unique_string += char
+# print(len(unique_string))
 
 ##############################################
 
@@ -121,7 +137,7 @@ s = 'abca'
 # secret value. If it's not found, it doesn't print anything. 
 
 # your code here
-secret = 4
+# secret = random.randint(1,+nd: {secret}")
 
 
 ################################################
@@ -133,8 +149,35 @@ secret = 4
 # secret value. If it's not found, prints that it didn't find it. 
 
 # your code here   
-secret = 4
+# secret = random.randint(1,20)
 
+# found_flag: bool = False
+
+# for i in range(11):
+#     if secret == i:
+#         found_flag = True
+
+# if found_flag:
+#     print(f"secret found: {secret}")
+# else:
+#     print(f"secret not found: {secret}")
+Tickets = 1000
+Less = 20
+solution_exists = False
+for i in range(0,Tickets + 1):
+    Alyssa = i
+    Ben =  max(Alyssa - Less, 0)
+    Cindy = Alyssa * 2
+    if Alyssa + Ben + Cindy == Tickets:
+        solution_exists = True
+        break
+
+if solution_exists:
+    print(f"Alyssa sold {Alyssa} tickets.")
+    print(f"Ben sold {Ben} tickets.")
+    print(f"Cindy sold {Cindy} tickets.")
+else:
+    print("A solution does not exist.")
     
 ####################################################
 
