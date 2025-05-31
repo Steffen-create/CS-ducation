@@ -15,7 +15,7 @@
 # for i in range(10):
 #     x += 0.1
 # # print(x == 1)
-
+ 
 # print(x, '==', 10*0.1)
 
 #############
@@ -117,6 +117,34 @@
 #     x += 0.022 # increment
 #     print(x)      # check this value for floating point error
 
+Test = 0.022
+# i = 1
+# Increment = 0.022
+# while i*Test == Increment:
+#     Increment += Test
+#     i += 1
+# print(i-1, Increment, Test)
+
+
+def BitRep(x: float, precision: int = 53)-> str:
+    bitrep = "0."
+    if x == 0:
+        return bitrep + "0"
+    step = x
+    for i in range(precision + 10):
+        if int(step) >0:
+            bitrep += str(int(step))
+            step %= 1
+        else:
+            step *= 2
+            bitrep += "0"
+        print(step)
+        print(bitrep)
+        if step == 0:
+            break
+        
+    return bitrep[:precision+3]+"|"+bitrep[precision+3:]
+print(f"bitrep is: {BitRep(Test)}")
 
 # 2. Automate the code from the previous problem. Suppose you are 
 # just given an increment value. Write code that automatically
@@ -124,6 +152,13 @@
 # until you start to get a floating point error.
 
 # your code here
+Test = 256.0000000000000000000000000000001
+i = 1
+Increment = Test
+while i*Test == Increment:
+    Increment += Test
+    i += 1
+print(i-1, Increment, i*Test)
 
 #################################################
 #################################################
