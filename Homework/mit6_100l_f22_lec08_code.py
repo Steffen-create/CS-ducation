@@ -1,3 +1,4 @@
+import math 
 #########################
 ## EXAMPLE: combinations of print and return
 #########################
@@ -46,19 +47,19 @@ def mult(x,y):
 
 ############ YOU TRY IT ####################
 # Fix this buggy code so it works according to the specification:
-def is_triangular(n):
-    """ n is an int > 0 
-        Returns True if n is triangular, i.e. equals a continued
-        summation of natural numbers (1+2+3+...+k) 
-    """
-    total = 0
-    for i in range(n):
-        total += i
-        if total == n:
-            print(True)
-    print(False)
+# def is_triangular(n):
+#     """ n is an int > 0 
+#         Returns True if n is triangular, i.e. equals a continued
+#         summation of natural numbers (1+2+3+...+k) 
+#     """
+#     total = 0
+#     for i in range(n):
+#         total += i+1
+#         if total == n:
+#             return True
+#     return False
 
-# # start by runing it on simple test cases
+# # # start by runing it on simple test cases
 # print(is_triangular(4))  # print False
 # print(is_triangular(6))  # print True
 # print(is_triangular(1))  # print True
@@ -84,8 +85,8 @@ def bisection_root(x):
 #    print(ans, 'is close to the root of', x)
     return ans
 
-# print(bisection_root(4))
-# print(bisection_root(123))
+# print(bisection_root(4, 0.01))
+# print(bisection_root(123, 0.01))
 
 
 ###################### YOU TRY IT ######################
@@ -94,10 +95,60 @@ def count_nums_with_sqrt_close_to(n, epsilon):
         epsilon is a positive number < 1
     Returns how many integers have a square root within epsilon of n """
     # your code here
+    """
+    logic is as follows: 
+    1. Search for lowest number with square root within range
+    2. Search for highest number with square root wihin range
+    3. print all numbers in between
+
+    we can use bisection search for the lowest/highest. We modify the succes boolean in the while loop to:
+    current guess is within error margin n +- epsilon and the next step (down if lowest, up if highest) does not fall within error range.
+
+    we have to use ceiling/flooring for the edge case of 
+    - current guess = answer - 1 and high = answer, low = answer - 2 for lowest number
+    - current guess = answer + 1 and low = answer, high = answer + 2 for highest number
+    """
+    count = 0
+    for i in range(n**3):
+        sqrt = bisection_root(i)
+        if abs(n-sqrt) < epsilon:
+            print(i, sqrt)
+            count += 1
+    return count
+    # initial_guess = n**2
+    # low = 0
+    # high = initial_guess
+    # lowest = math.ceil((low + high) / 2)
+    # while not (abs(bisection_root(lowest) - n) < epsilon and abs(bisection_root(lowest - 1) - n) > epsilon):
+    #     if abs(bisection_root(lowest) - n) > epsilon:
+    #         low = lowest
+    #     else:
+    #         high = lowest
+    #     lowest = math.ceil((low + high) / 2)
+    # low = initial_guess
+    # high = n**4
+    # highest = math.floor((low + high) / 2)
+    # while not (abs(bisection_root(highest) - n) < epsilon and abs(bisection_root(highest + 1) - n) > epsilon):
+    #     if abs(bisection_root(highest) - n) > epsilon:
+    #         high = highest
+    #     else:
+    #         low = highest
+    #     highest = math.ceil((low + high) / 2)
 
 
-#print(count_nums_with_sqrt_close_to(10, 0.1))
 
+    # count = highest - lowest
+    # if count < 0:
+    #     return ""
+    # else:
+    #     for i in range(count):
+    #         print(lowest)
+    #         lowest += 1
+    #     return highest
+
+print(count_nums_with_sqrt_close_to(10, 0.1))
+print((10-0.1)**2)
+print((10+0.1)**2)
 #############################################################
 
 
@@ -182,19 +233,23 @@ def func_c(f, z):
 
 
 ############## YOU TRY IT ###############
-def apply(criteria,n):
-    """ criteria is a function that takes in a number and returns a Boolean
-        n is an int
-    Returns how many ints from 0 to n (inclusive) match the criteria 
-    (i.e. return True when criteria is applied to them)
-    """ 
-    # your code here
+# def apply(criteria,n):
+#     """ criteria is a function that takes in a number and returns a Boolean
+#         n is an int
+#     Returns how many ints from 0 to n (inclusive) match the criteria 
+#     (i.e. return True when criteria is applied to them)
+#     """ 
+#     # your code here
+#     count = 0
+#     for i in range(n+1):
+#         if criteria(i):
+#             count += 1
+#     return count
 
+# def is_even(x):
+#     return x%2==0
 
-def is_even(x):
-    return x%2==0
-
-how_many = apply(is_even,10)
+# how_many = apply(is_even,10)
 # print(how_many)
 
 
@@ -205,14 +260,20 @@ how_many = apply(is_even,10)
 # It applies both functions to numbers between 0 and n (inclusive) 
 # and returns the maximum value of all outcomes. 
 
-def max_of_both(n, f1, f2):
-    """ n is an int
-        f1 and f2 are functions that take in an int and return a float
-    Applies f1 and f2 on all numbers between 0 and n (inclusive). 
-    Returns the maximum value of all these results.
-    """
-    # your code here
-
+# def max_of_both(n, f1, f2):
+#     """ n is an int
+#         f1 and f2 are functions that take in an int and return a float
+#     Applies f1 and f2 on all numbers between 0 and n (inclusive). 
+#     Returns the maximum value of all these results.
+#     """
+#     # your code here
+#     max = f1(n)
+#     for i in range(n+1):
+#         if f1(i) > max:
+#             max = f1(i)
+#         if f2(i) > max:
+#             max = f2(i)
+#     return max
 # print(max_of_both(2, lambda x:x-1, lambda x:x+1))  # prints 3
 # print(max_of_both(10, lambda x:x*2, lambda x:x/2))  # prints 20
 
@@ -271,7 +332,8 @@ def is_palindrome(s):
     A palindrome is a string that contains the same 
     sequence of characters forward and backward """
     # your code here
-
+    reverse = s[::-1]
+    return s == reverse
 # For example:
 # print(is_palindrome("222"))   # prints True
 # print(is_palindrome("2222"))   # prints True
@@ -284,7 +346,7 @@ def f_yields_palindrome(n, f):
     Returns True if applying f on n returns a number that is a
     palindrome and False otherwise.  """
     # your code here
-
+    return is_palindrome(str(f(n)))
 
 # For example:
 def f(x):
