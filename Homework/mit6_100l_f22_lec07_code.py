@@ -2,14 +2,11 @@
 #### EXAMPLE: applying functions to repeat same task many times
 ###########################
 #A very simple example of a function that has one
-#argument and returns one value
-def is_even(i):   
-    """Assumes: i, a positive int
-    Returns True if i is even, otherwise False"""
-    if i%2 == 0:
-        return True
-    else:
-        return False
+# #argument and returns one value
+# def is_even(i):   
+#     """Assumes: i, a positive int
+#     Returns True if i is even, otherwise False"""
+#     return i%2 == 0
 
 # is_even(3) # <- returns False
 # is_even(8) # <- returns True
@@ -21,14 +18,14 @@ def is_even(i):
 
 ############## YOU TRY IT ###################
 # Write code that satisfies the following specification:
-def div_by(n, d):
-    """ n and d are ints > 0
-        Returns True if d divides n evenly and False otherwise 
-    """
-    # your code here
+# def div_by(n, d):
+#     """ n and d are ints > 0
+#         Returns True if d divides n evenly and False otherwise 
+#     """
+#     # your code here
+#     return n%d == 0
 
-
-# For example: 
+# # For example: 
 # print(div_by(10,3))     # print False
 # print(div_by(195,13))   # returns True
 
@@ -77,11 +74,16 @@ def sum_odd(a, b):
 ############## YOU TRY IT ###################
 # Write code that satisfies the following specification:
 # Hint, use paper and pen for a strategy before coding!
-def is_palindrome(s):
-    """ s is a string
-    Returns True if s is a palindrome and False otherwise
-    """
-    # your code here
+# def is_palindrome(s):
+#     """ s is a string
+#     Returns True if s is a palindrome and False otherwise
+#     """
+#     reversed = s[::-1]
+#     return s == reversed
+#     # your code here
+
+# print(is_palindrome("Hello"))
+# print(is_palindrome("abba"))
 
 ################################################
 
@@ -89,14 +91,19 @@ def is_palindrome(s):
 ################ YOU TRY IT AT HOME #####################
 ################################################
 # 1. Write code that satisfies the following specs:
-def keep_consonants(word):
-    """ word is a string of lowercase letters
-        Returns a string containing only the consonants 
-        of word in the order they appear
-    """
-    # your code here
-
-# For example
+# def keep_consonants(word):
+#     """ word is a string of lowercase letters
+#         Returns a string containing only the consonants 
+#         of word in the order they appear
+#     """
+#     # your code here
+#     mystring = ""
+#     consonants = "bcdfghjklmnpqrstvwxz"
+#     for char in word:
+#         if char in consonants:
+#             mystring += char
+#     return mystring
+# # For example
 # print(keep_consonants("abcd"))  # prints bcd
 # print(keep_consonants("aaa"))  # prints an empty string
 # print(keep_consonants("babas"))  # prints bbs
@@ -111,11 +118,25 @@ def first_to_last_diff(s, c):
         occur in s, returns -1. 
     """
     # your code here
-
+    reverse = s[::-1]
+    if c not in s:
+        return -1
+    else:
+        first: int
+        last: int
+        for i in range(len(s)):
+            if s[i] == c:
+                first = i
+                break
+        for i in range(len(reverse)):
+            if s[i] == c:
+                last = len(s) - i - 1
+                break
+    return last - first
 # For example
-# print(first_to_last_diff('aaaa', 'a'))  # prints 3
-# print(first_to_last_diff('abcabcabc', 'b'))  # prints 6
-# print(first_to_last_diff('abcabcabc', 'b'))  # prints -1
+print(first_to_last_diff('aaaa', 'a'))  # prints 3
+print(first_to_last_diff('abcabcabc', 'b'))  # prints 6
+print(first_to_last_diff('acacac', 'b'))  # prints -1
 
 
 ################################################
