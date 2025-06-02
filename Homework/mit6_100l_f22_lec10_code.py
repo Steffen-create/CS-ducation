@@ -23,28 +23,29 @@
 
 ############### YOU TRY IT #######################
 # Write a function that meets the specification:
-def make_ordered_list(n):
-    """ n is a positive int
-    Returns a list containing all ints in order 
-    from 0 to n (inclusive)
-    """
-    # your code here
-
+# def make_ordered_list(n):
+#     """ n is a positive int
+#     Returns a list containing all ints in order 
+#     from 0 to n (inclusive)
+#     """
+#     # your code here
+#     return [ i for i in range(n+1)]
     
-#print(make_ordered_list(6))  # prints [0, 1, 2, 3, 4, 5, 6]
+    
+# print(make_ordered_list(6))  # prints [0, 1, 2, 3, 4, 5, 6]
 
 #####################################################
 
 
 ############ YOU TRY IT ###############
-def remove_elem(L, e):
-    """ 
-    L is a list
-    Returns a new list with elements in the same order as L
-    but without any elements equal to e. 
-    """
-    # your code here
-
+# def remove_elem(L, e):
+#     """ 
+#     L is a list
+#     Returns a new list with elements in the same order as L
+#     but without any elements equal to e. 
+#     """
+#     # your code here
+#     return [ i for i in L if i != e]
   
 # L = [1,2,2,2]
 # print(remove_elem(L, 2))    # prints [1]
@@ -81,11 +82,12 @@ def remove_elem(L, e):
 
 ####### YOU TRY IT ###################
 # Write a function that meets this specification
-def count_words(sen):
-    """ sen is a string representing a sentence 
-    Returns how many words are in sen (i.e. a word is a 
-    a sequence of characters between spaces. """
-    # your code here
+# def count_words(sen: str):
+#     """ sen is a string representing a sentence 
+#     Returns how many words are in sen (i.e. a word is a 
+#     a sequence of characters between spaces. """
+#     # your code here
+#     return len(sen.split(" "))
 
 
 # s = "Hello it's me"
@@ -113,12 +115,14 @@ def count_words(sen):
 
 ############## YOU TRY IT #################
 # Write a function that meets this specification
-def sort_words(sen):
-    """ sen is a string representing a sentence 
-    Returns a list containing all the words in sen but
-    sorted in alphabetical order. """
-    # your code here
-
+# def sort_words(sen):
+#     """ sen is a string representing a sentence 
+#     Returns a list containing all the words in sen but
+#     sorted in alphabetical order. """
+#     # your code here
+#     WordList: list = sen.split(" ")
+#     WordList.sort()
+#     return WordList
 
 # s = "look at this photograph"
 # print(sort_words(s))    # prints ['at', 'look', 'photograph', 'this']
@@ -289,11 +293,13 @@ def sort_words(s):
 # What's the value of brunch here?
 
 ## Question 3. 
-def apply_to_each(L, f):
-    """ L is a list of numbers 
-        f is a list that takes in a number and returns a number
-    Mutate L such that you apply function f to every element in L """
-    # your code here
+# def apply_to_each(L, f):
+#     """ L is a list of numbers 
+#         f is a function that takes in a number and returns a number
+#     Mutate L such that you apply function f to every element in L """
+#     # your code here
+#     for i in range(len(L)):
+#         L[i] = f(L[i])
 
 # test = [1,-2,3]
 # apply_to_each(test, lambda x: x**2)

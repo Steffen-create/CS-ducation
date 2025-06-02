@@ -60,14 +60,23 @@ def quotient_and_remainder(x, y):
 
 ############### YOU TRY IT #####################
 # Write a function that meets these specifications:
-def char_counts(s):
-    """ s is a string of lowercase chars 
-    Returns a tuple where the first value is the 
-    number of vowels in s and the second value 
-    is the number of consonants in s 
-    """
-    # your code here
-
+# def char_counts(s):
+#     """ s is a string of lowercase chars 
+#     Returns a tuple where the first value is the 
+#     number of vowels in s and the second value 
+#     is the number of consonants in s 
+#     """
+#     # your code here
+#     vowel = "aeiouy"
+#     consonant = "bcefghjklmnpqrtsvwxz"
+#     count_vowel = 0
+#     count_cons = 0
+#     for char in s:
+#         if char in vowel:
+#             count_vowel += 1
+#         elif char in consonant:
+#             count_cons += 1
+#     return count_vowel, count_cons
 
 # print(char_counts("abcd"))  # prints (1,3)
 # print(char_counts("zcght"))  # prints (0,5)
@@ -138,10 +147,23 @@ def sum_and_prod(L):
     is the product of all elements in L 
     """
     # your code here
+    if len(L) == 0:
+        product = None
+        sum = None
+    else:
+        product = 1
+        sum = 0
+    
+    for i in L:
+        sum += i
+        product *= i
+    
+    return sum, product
 
+        
  
 
-# print(sum_and_prod([4,6,2,5]))   # prints (17, 240)
+print(sum_and_prod([4,6,2,5]))   # prints (17, 240)
 
 
 
@@ -191,32 +213,39 @@ def sum_and_prod(L):
 
 # Trace this code:
 # Figure out what it returns and then run it to check yourself.
-def always_sunny(t1, t2):
-    """ t1, t2 are non-empty """
-    sun = ("sunny", "sun")
-    first = t1[0] + t2[0]
-    return (sun[0], first)
+# def always_sunny(t1, t2):
+#     """ t1, t2 are non-empty """
+#     sun = ("sunny", "sun")
+#     first = t1[0] + t2[0]
+#     return (sun[0], first)
 
-# always_sunny(('cloudy' ), ('cold',))  # returns what?
+# always_sunny(('cloudy' ), ('cold',))  # returns what? It returns ("sunny", 'ccold')
 
 
 
-def max_of_both(n, f1, f2):
-    """ n is an int
-        f1 and f2 are functions that take in an int and return a float
-    Applies f1 and f2 on all numbers between 0 and n (inclusive). 
-    Returns the maximum value of all these results.
-    """
-    # your code here
+# def max_of_both(n, f1, f2):
+#     """ n is an int
+#     f1 and f2 are functions that take in an int and return a float
+#     Applies f1 and f2 on all numbers between 0 and n (inclusive). 
+#     Returns the maximum value of all these results.
+#     """
+#     # your code here
+#     values = [ f1(i) for i in range(n+1)] + [ f2(i) for i in range(n+1)]
+#     return max(*values)
 
 # print(max_of_both(2, lambda x:x-1, lambda x:x+1))  # prints 3
 # print(max_of_both(10, lambda x:x*2, lambda x:x/2))  # prints 20
 
 
-def sublist_sum(L):
-    """ L is a list whose elements are lists with int elements
-    Returns the sum of all int elements. """
-    # your code here
+# def sublist_sum(L):
+#     """ L is a list whose elements are lists with int elements
+#     Returns the sum of all int elements. """
+#     # your code here¨
+#     sum = 0
+#     for sublist in L:
+#         for i in sublist:
+#             sum += i
+#     return sum
 
 # print(sublist_sum([[1,2], [4,5,6]])) # prints 18
 
