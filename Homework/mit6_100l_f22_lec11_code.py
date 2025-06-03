@@ -23,15 +23,15 @@
 ############ YOU TRY IT ###############
 # This one is similar to remove_elem from lec10 except that remove_elem 
 # returns a new list and this one mutates the parameter L (and returns None)
-def remove_all(L, e):
-    """ 
-    L is a list
-    Mutates L to remove all elements in L that are equal to e
-    Returns None.
-    """
-    # your code here
-    
-
+# def remove_all(L: list, e):
+#     """ 
+#     L is a list
+#     Mutates L to remove all elements in L that are equal to e
+#     Returns None.
+#     """
+#     # your code here
+#     while e in L:
+#         L.remove(e)
 # Lin = [1,2,2,2]
 # remove_all(Lin, 2)
 # print(Lin)    # prints [1]
@@ -81,10 +81,10 @@ def remove_all(L, e):
 ## TRICKY EXAMPLE 4: removing element as you are mutating a list
 #############
 ## this is an incorrect way to do it
-def remove_dups(L1, L2):
-    for e in L1:
-        if e in L2:
-            L1.remove(e)
+# def remove_dups(L1, L2):
+#     for e in L1:
+#         if e in L2:
+#             L1.remove(e)
 
 # L1 = [10, 20, 30, 40]
 # L2 = [10, 20, 50, 60]
@@ -246,15 +246,16 @@ def remove_dups(L1, L2):
 ############################################
 ################### AT HOME ######################
 ############################################
-def repeat(L, n):
-    """ L is a list of ints
-        n is a positive int
-    Mutates L to contain whatever elements L has right now repeated n times. """
-    # your code here 
+# def repeat(L, n):
+#     """ L is a list of ints
+#         n is a positive int
+#     Mutates L to contain whatever elements L has right now repeated n times. """
+#     # your code here 
+#     L *= n
     
 # Lin = [1,2,3]
 # repeat(Lin, 3)
-# print(Lin)    # prints [1, 2, 3, 1, 2, 3, 1, 2, 3]
+print(Lin)    # prints [1, 2, 3, 1, 2, 3, 1, 2, 3]
 
 # Think about why the following solution does not work!
 def repeat(L, n):
