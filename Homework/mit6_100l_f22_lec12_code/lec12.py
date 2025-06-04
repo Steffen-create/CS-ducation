@@ -196,8 +196,8 @@ def is_pal(x):
 # If L = ['abc', 'm', 'p', 'xyz', '123', 57]
 # It makes ['b', 'y', '2']
 L = ['abc', 'm', 'p', 'xyz', '123', 57]
-
-
+new_list = [i[1] for i in L if isinstance(i, str) and len(i)==3]
+print(new_list)
 ## There is a file lec12_wordle.py that is buggy!
 ## Try to fix the code to play the game correctly
 ###################################
