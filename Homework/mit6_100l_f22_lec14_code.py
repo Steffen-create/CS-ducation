@@ -92,7 +92,7 @@ def find_grades(grades, students):
         students is a list of student names 
     Returns a list containing the grades for students (in the same order) """
     # your code here
-  
+    return [grades[student] for student in students]
 
 d = {'Ana':'B', 'Matt':'C', 'John':'B', 'Katy':'A'}
 # print(find_grades(d, ['Matt', 'Katy'])) # returns ['C', 'A']
@@ -101,12 +101,16 @@ d = {'Ana':'B', 'Matt':'C', 'John':'B', 'Katy':'A'}
 
 
 ################## YOU TRY IT #########################
-def find_in_L(Ld, k):
+def find_in_L(L: list[dict], k: int) -> bool:
     """ L is a list of dicts
         k is an int
     Returns True if k is a key in any dicts of L and False otherwise """
     # your code here
-
+    flag = False
+    for dic in L:
+        if k in dic.keys():
+            flag = True
+    return flag
   
 d1 = {1:2, 3:4, 5:6}
 d2 = {2:4, 4:6}
@@ -119,16 +123,20 @@ d3 = {1:1, 3:9, 4:16, 5:25}
 
 
 ########################### YOU TRY IT ######################
-def count_matches(d):
+def count_matches(d: dict) -> int:
     """ d is a dict
     Returns how many entries in d have the key equal to its value """
     # your code here
+    count = 0
+    for key in d.keys():
+        if d[key] == key:
+            count +=1
+    return count
 
-
-d = {1:2, 3:4, 5:6}
+# d = {1:2, 3:4, 5:6}
 # print(count_matches(d))   # prints 0
 
-d = {1:2, 'a':'a', 5:5}
+# d = {1:2, 'a':'a', 5:5}
 # print(count_matches(d))   # prints 2
 
 ##############################################################
@@ -144,7 +152,7 @@ def get_average(data, what):
         Returns the average of all elements in data that match 'what' """
     all_data = []
     for stud in data.keys():
-        pass
+        all_data = all_data + data[stud][what]
         # Which one of the below is correct? 
         # A) all_data = all_data + data[stud][what]
         # B) all_data.append(data[stud][what]) 
@@ -309,12 +317,21 @@ def count_matches(d):
 ############## AT HOME ###################
 ######################################################
 
-def is_inverse(d1, d2):
-    """ d1 and d2 are dicts 
-    Assume values of d1 and d2 are unique and immutable
-    Returns True if d1's keys are values in d2 and d1's 
-    values are keys in d2 """
-    pass
+# def is_inverse(d1: dict, d2: dict):
+#     """ d1 and d2 are dicts 
+#     Assume values of d1 and d2 are unique and immutable
+#     Returns True if d1's keys are values in d2 and d1's 
+#     values are keys in d2 """
+#     d1_values = set(d1.values())
+#     d2_values = set(d2.values())
+#     d1_keys = set(d1.keys())
+#     d2_keys = set(d2.keys())
+#     if d1_values == d2_keys and d2_values == d1_keys:
+#         return True
+#     else:
+#         return False
+
+
 
 # d1 = {1:2, 3:4}
 # d2 = {2:1, 4:3}
@@ -336,22 +353,31 @@ def add_to_d(d, L):
     tuple in L and the associated value is the second element of a 
     tuple in L. If the key is already in d, do nothing to its value. 
     If the key cannot be added, raise a ValueError. Returns None. """
-    pass
+    for t in L:
+        key = t[0]
+        value = t[1]
+        try:
+            d.get(key)
+        except:  
+            message = f"Cannot use {key} as key in dictionary"
+            raise ValueError(message)
+        if d.get(key, None) == None:
+            d[key] = value
     
-# d = {}
-# L = [(1,2), (3,4)]
-# add_to_d(d, L)
-# print(d)   # d is mutated to be {1: 2, 3: 4}
+d = {}
+L = [(1,2), (3,4)]
+add_to_d(d, L)
+print(d)   # d is mutated to be {1: 2, 3: 4}
 
-# d = {1:1}
-# L = [(1,2), (3,4)]
-# add_to_d(d, L)
-# print(d)   # d is mutated to be {1: 1, 3: 4}
+d = {1:1}
+L = [(1,2), (3,4)]
+add_to_d(d, L)
+print(d)   # d is mutated to be {1: 1, 3: 4}
 
-# d = {1:1}
-# L = [(3,4), ([1,2,3], 5)]
-# add_to_d(d, L)   
-# # raises a ValueError because its trying to add a list (mutable obj) as key
+d = {1:1}
+L = [(3,4), ([1,2,3], 5)]
+add_to_d(d, L)   
+# raises a ValueError because its trying to add a list (mutable obj) as key
 
 
 ################################################################
