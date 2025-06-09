@@ -30,7 +30,7 @@ def load_file(filename):
 
 
 ### Problem 0: Prep Data ###
-def text_to_list(input_text):
+def text_to_list(input_text: str) -> list[str]:
     """
     Args:
         input_text: string representation of text from file.
@@ -38,11 +38,21 @@ def text_to_list(input_text):
     Returns:
         list representation of input_text, where each word is a different element in the list
     """
-    pass
+    whitespaces = string.whitespace
+    text_copy = str(input_text)
+    for char in whitespaces:
+        text_copy = text_copy.replace(char, " ")
+    while True:
+        before = len(text_copy)
+        text_copy = text_copy.replace("  ", " ")
+        after = len(text_copy)
+        if before == after:
+            break
+    return list(text_copy.replace(whitespaces," ").split(" "))
 
 
 ### Problem 1: Get Frequency ###
-def get_frequencies(input_iterable):
+def get_frequencies(input_iterable: str | list[str]) -> dict[str, int]:
     """
     Args:
         input_iterable: a string or a list of strings, all are made of lowercase characters
@@ -53,11 +63,24 @@ def get_frequencies(input_iterable):
     Note: 
         You can assume that the only kinds of white space in the text documents we provide will be new lines or space(s) between words (i.e. there are no tabs)
     """
-    pass
+    def check_keys(d: dict, element: str, value: int = 1) -> None:
+        if element in d:
+            d[element] += value
+        else:
+            d[element] = value
+        
+    dic = {}
+    if isinstance(input_iterable, str):
+        for char in input_iterable:
+            check_keys(dic, char)
+    else:
+        for word in input_iterable:
+            check_keys(dic, word)
+    return dic
 
 
 ### Problem 2: Letter Frequencies ###
-def get_letter_frequencies(word):
+def get_letter_frequencies(word: str) -> dict:
     """
     Args:
         word: word as a string
@@ -66,11 +89,11 @@ def get_letter_frequencies(word):
         is a letter in word and the corresponding int
         is the frequency of the letter in word
     """
-    pass
+    return get_frequencies(word)
 
 
 ### Problem 3: Similarity ###
-def calculate_similarity_score(freq_dict1, freq_dict2):
+def calculate_similarity_score(freq_dict1: dict[str,int], freq_dict2: dict[str,int]):
     """
     The keys of dict1 and dict2 are all lowercase,
     you will NOT need to worry about case sensitivity.
@@ -94,9 +117,19 @@ def calculate_similarity_score(freq_dict1, freq_dict2):
          all frequencies in both dict1 and dict2.
         Return 1-(DIFF/ALL) rounded to 2 decimal places
     """
-    pass
+    if freq_dict1 == {} or freq_dict2 == {}:
+        return 0
+    union: set = set(freq_dict1.keys())
+    union = union.union(freq_dict2.keys())
+    denominator = 0
+    numerator = 0
+    for key in union:
+        numerator += abs(freq_dict1.get(key, 0) - freq_dict2.get(key, 0))
+        denominator += freq_dict1.get(key, 0) + freq_dict2.get(key, 0)
+    
 
-
+    similarity_score = 1 - numerator/denominator
+    return round(similarity_score, 2)
 ### Problem 4: Most Frequent Word(s) ###
 def get_most_frequent_words(freq_dict1, freq_dict2):
     """
@@ -118,11 +151,25 @@ def get_most_frequent_words(freq_dict1, freq_dict2):
     If multiple words are tied (i.e. share the same highest frequency),
     return an alphabetically ordered list of all these words.
     """
-    pass
-
-
+    # print(f"freq_dict1: {freq_dict1}")
+    # print(f"freq_dict2: {freq_dict2}")
+    union: set = set(freq_dict1.keys())
+    union = union.union(freq_dict2.keys())
+    frequency = []
+    for word in union:
+        frequency.append([word, freq_dict1[word] + freq_dict2[word]])
+    sorted_list = sorted(frequency, key= lambda x: x[1], reverse= True)
+    word_list = []
+    max_freq = sorted_list[0][1]
+    for object in sorted_list:
+        word = object[0]
+        freq = object[1]
+        if freq == max_freq:
+            word_list.append(word)
+    word_list.sort()
+    return word_list
 ### Problem 5: Finding TF-IDF ###
-def get_tf(file_path):
+def get_tf(file_path: str) -> dict[str, float]:
     """
     Args:
         file_path: name of file in the form of a string
@@ -133,9 +180,16 @@ def get_tf(file_path):
         in the document) / (total number of words in the document)
     * Think about how we can use get_frequencies from earlier
     """
-    pass
+    raw_string = load_file(file_path)
+    word_list = text_to_list(raw_string)
+    freq_dict = get_frequencies(word_list)
+    words_total = 0
+    for freq in freq_dict.values():
+        words_total += freq
+    tf_dict = {key: freq_dict[key]/words_total for key in freq_dict}
+    return tf_dict
 
-def get_idf(file_paths):
+def get_idf(file_paths: list[str]) -> dict[str, float]:
     """
     Args:
         file_paths: list of names of files, where each file name is a string
@@ -147,7 +201,23 @@ def get_idf(file_paths):
     with math.log10()
 
     """
-    pass
+    list_of_words_list: list[list[str]] = []
+    word_set = set()
+    for file_path in file_paths:
+        raw_string = load_file(file_path)
+        words_list = text_to_list(raw_string)
+        list_of_words_list.append(words_list)
+        word_set = word_set | set(words_list)
+    word_dic = {}
+    for word in word_set:
+        word_dic[word] = len(list(filter(lambda x: word in x, list_of_words_list)))
+    total = len(file_paths)
+
+    idf_dic = {}
+    for word in word_dic:
+        idf_dic[word] = math.log10(total / word_dic[word])
+    return idf_dic
+
 
 def get_tfidf(tf_file_path, idf_file_paths):
     """
@@ -162,7 +232,17 @@ def get_tfidf(tf_file_path, idf_file_paths):
 
         * TF-IDF(i) = TF(i) * IDF(i)
         """
-    pass
+    tf_dict: dict[str, float] = get_tf(tf_file_path)
+    idf_dict: dict[str, float] = get_idf(idf_file_paths)
+    words = set(tf_dict.keys())
+    words_idf_list = []
+    for word in words:
+        if word not in idf_dict:
+            raise ZeroDivisionError(f"the term {word} is not found in the collecton to calculate IDF. A division by zero error is invitable as no smoothing has been implemented. \n {idf_dict}")
+        words_idf_list.append([tf_dict.get(word, 0)*idf_dict.get(word, 0), word])
+    words_idf_list.sort()
+    result = list(tuple(sublist[::-1]) for sublist in words_idf_list )
+    return result
 
 
 if __name__ == "__main__":
@@ -172,6 +252,9 @@ if __name__ == "__main__":
     ###############################################################
 
     ## Tests Problem 0: Prep Data
+    # test_input = "hello  it is\nme\rmario"
+    # expected = ["hello", "it", "is", "me", "mario"]
+    # print(text_to_list(test_input))
     # test_directory = "tests/student_tests/"
     # hello_world, hello_friend = load_file(test_directory + 'hello_world.txt'), load_file(test_directory + 'hello_friends.txt')
     # world, friend = text_to_list(hello_world), text_to_list(hello_friend)
@@ -187,7 +270,7 @@ if __name__ == "__main__":
     # print(world_word_freq)    # should print {'hello': 2, 'world': 1}
     # print(friend_word_freq)   # should print {'hello': 1, 'friends': 1}
 
-    ## Tests Problem 2: Get Letter Frequencies
+    # # Tests Problem 2: Get Letter Frequencies
     # freq1 = get_letter_frequencies('hello')
     # freq2 = get_letter_frequencies('that')
     # print(freq1)      #  should print {'h': 1, 'e': 1, 'l': 2, 'o': 1}
