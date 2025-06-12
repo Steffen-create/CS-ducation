@@ -68,12 +68,12 @@ test = [30, 40, 50]
     
 def total_len_recur(L):
     if len(L) == 1:
-        return ____
+        return len(L[0])
     else:
-        return ____
+        return total_len_recur([L[0]]) + total_len_recur(L[1:])
 
 test = ["ab", "c", "defgh"]
-# print(total_len_recur(test))  # should print 8
+print(total_len_recur(test))  # should print 8
 
 ##########################################
 
@@ -163,14 +163,22 @@ def in_lists_of_list(L, e):
     Hint, the in operator is useful here, i.e. e in something
     """
     # your code here
+    if isinstance(L, int):
+        if L == e:
+            return True
+        else:
+            return False
+    if len(L) == 1:
+        return in_lists_of_list(L[0],e)
+    return in_lists_of_list(L[0], e) or in_lists_of_list(L[1:], e)
 
     
 
 test = [[1,2], [3,4], [5,6,7]]
-# print(in_lists_of_list(test, 3))  # prints True
+print(in_lists_of_list(test, 3))  # prints True
 
 test = [[1,2], [3,4], [5,6,7]]
-# print(in_lists_of_list(test, 0))  # prints False
+print(in_lists_of_list(test, 0))  # prints False
 
 ###############################################
 
@@ -280,12 +288,19 @@ def in_lists_of_list(L, e):
 ######################################################
 # Q1. Memoize the code to find possible scores in basketball
 def score_count(x, d):
-    pass
+    if x in d:
+        return d[x]
+    else:
+        new_value = score_count(x-1, d) + score_count(x-2, d) + score_count(x-3, d)
+        if x not in d:
+            d[x] = new_value
+        return new_value
+
     
 d = {1:1, 2:2, 3:3}
-# print(score_count(4, d))  # prints 6
-# print(score_count(6, d))  # prints 20
-# print(score_count(13, d))  # prints 1431
+print(score_count(4, d))  # prints 6
+print(score_count(6, d))  # prints 20
+print(score_count(13, d))  # prints 1431
 
 # Q2. 
 def in_list_of_lists_mod(L, e):
@@ -297,23 +312,41 @@ def in_list_of_lists_mod(L, e):
     sublists of L and False otherwise. 
     """
     # your code here
+    if isinstance(L, int):
+        return L == e
+    elif len(L) == 1:
+        return in_list_of_lists_mod(L[0], e)
+    else:
+        if in_list_of_lists_mod(L[0], e):
+            return True
+        return in_list_of_lists_mod(L[1:], e)
 
 
-# test = [[1,2],3,4,5,6,7]
-# print(in_list_of_lists_mod(test, 3))  # prints True
-# test = [[1,2],[3,4,5],6,7]
-# print(in_list_of_lists_mod(test, 3))  # prints True
-# test = [[1,2],[3,4,5],6,7]
-# print(in_list_of_lists_mod(test, 10))  # prints False
+test = [[1,2],3,4,5,6,7]
+print(in_list_of_lists_mod(test, 3))  # prints True
+test = [[1,2],[3,4,5],6,7]
+print(in_list_of_lists_mod(test, 3))  # prints True
+test = [[1,2],[3,4,5],6,7]
+print(in_list_of_lists_mod(test, 10))  # prints False
 
 # Q3. 
-def my_deepcopy(L):
+def my_deepcopy(L: list):
     """ 
     L is a list, containing lists or list of lists, etc.
     Returns a new list with the same structure as L that 
     contains copies (recursively) of every sublist 
     """
     # your code here
+    if len(L) == 1 and not isinstance(L[0], list):
+        return [L[0]]
+    if len(L) == 1 and isinstance(L[0], list):
+        return [my_deepcopy(L[0])]
+    else:
+        if not isinstance(L[0], list):
+            return [L[0]] + my_deepcopy(L[1:])
+        else:
+            return [my_deepcopy(L[0])] + my_deepcopy(L[1:])
+
 
 # myL = ["abc", ['d'], ['e', ['f', 'g']]]
 # my_newL = my_deepcopy(myL)
@@ -332,8 +365,10 @@ def f(L):
     if len(L) == 1:
         return L[0]
     else:
-        if L[0] < f((L[0])):
+        if L[0] < f((L[1:])):
             return L[0]
+        else:
+            return f((L[1:]))
         
 # print(f(['z', 'a', 'b', 'c', 'd']))  # should print 'a'
 
@@ -350,29 +385,40 @@ def g(L, e):
             return 0
     else:
         if L[0] == e:
-            1+g(L[1:], e)
+            return 1 + g(L[1:], e)
         else:
-            return 1
+            return g(L[1:], e)
     
 # print(g([1,2,3,1], 1))     # should print 2
 # print(g([1,1,2,3,1,1], 1)) # should print 4
     
 
-def h(L, e):
+def h(L: list | int, e: int) -> int:
     """ L is list, e is an int
     Returns a count of how many times e occurrs in L or 
     (recursively) any sublist of L
     """
-    if len(L) == 0:
-        return 0
+    if not isinstance(L, list):
+        if L == e:
+            return 1
+        else:
+            return 0
+    elif len(L) == 1:
+        if isinstance(L[0], list):
+            return h(L[0], e)
+        else:
+            if L[0] == e:
+                return 1
+            else:
+                return 0
     else:
         if type(L[0])==int:
             if L[0] == e:
-                return 1+h(L[1:], e)
+                return 1 + h(L[1:], e)
             else:
                 return h(L[1:], e)
-        elif type(L[0])== list:
-            return h(L[1:], e)
+        else:
+            return h(L[0],e) + h(L[1:], e)
     
 # print(h([1,2,[3],1], 1))        # should print 2
 # print(h([1,2,[3,1,[1,[1]]]], 1))  # should print 4
