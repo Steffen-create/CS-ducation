@@ -14,7 +14,7 @@ class Coordinate(object):
 # print(c.x)
 # print(origin.x)
 
-
+ 
 class Coordinate(object):
     """ A coordinate made up of an x and y numerical value """
     def __init__(self, x, y):
@@ -67,12 +67,25 @@ origin = Coordinate(a,a)
 # increases by n. It returns the total occupants after the increase. 
 
 class Vehicle(object):
-    def __init__(self, w, o, c):
-        self.wheels = w
-        self.occ = o
-        self.color= c
+    def __init__(self, w: int, o: int, c: str = "black"):
+        self.wheels: int = w
+        self.occ: int = o
+        self.color: str = c
+        self.max_occupancy: int = 5
     # add method add_n_occupants here
-        
+    def add_n_occupants(self, n: int) -> None:
+        if self.occ + n > self.max_occupancy:
+            raise ValueError(f"Cannot have more than {self.max_occupancy} occupants.")
+        self.occ += n
+    
+
+v1 = Vehicle(2,1,"red")
+v2 = Vehicle(18,3, "green")
+
+print(v1.occ)
+print(v2.color)
+
+
 # v1 = Vehicle(4,2,'blue')
 # print(v1.occ)   # prints 2
 # print(v1.add_n_occupants(3))   # prints 5
