@@ -76,7 +76,12 @@ def make_animals(L1, L2):
     Creates a list of Animals the same length as L1 and L2.
     An animal object at index i has the age and name
     corresponding to the same index in L1 and L2, respectively. """
-    # your code here
+    if len(L1) != len(L2):
+        raise ValueError("lists must be same length")
+    animals = [Animal(age) for age in L1]
+    for i in range(len(L2)):
+        animals[i].set_name(L2[i])
+    return animals
 
 
 L1 = [2,5,1]
@@ -112,11 +117,11 @@ class Rabbit(Animal):
     """ A subclass of Animal """
     def speak(self):
         """ prints the string meep to the console """
-        # your code here
+        print("meep")
 
     def __str__(self):
         """ Repr as "rabbit", a colon, self's name, a colon, self's age """
-        # your code here
+        return f"rabbit: {self.name}: {self.age}"
    
 r = Rabbit(5)
 # print(r)
@@ -163,11 +168,12 @@ p2 = Person("jill", 25)
 
 ######################## YOU TRY IT #####################
 # Write the function according to this spec
-def make_pets(d):
+def make_pets(d: dict[Person, Cat]):
     """ d is a dict mapping a Person obj to a Cat obj
     Prints, on each line, the name of a person, 
     a colon, and the name of that person's cat """
-    # your code here
+    for person, cat in d.items():
+        print(f"{person.get_name()}:{cat.get_name()}")
 
 
 p1 = Person("ana", 86)
@@ -179,7 +185,7 @@ c2.set_name("fluffsphere")
 
 # d = {p1:c1, p2:c2}
 # make_pets(d)  # prints ana:furball
-       #        james:fluffsphere
+#james:fluffsphere
 
 ##########################################################
 
@@ -248,28 +254,28 @@ class Rabbit(Animal):
     def __str__(self):
         return "rabbit:"+ self.get_rid()
 
-# # print("\n---- rabbit tests ----")
-# # print("---- testing creating rabbits ----")
-r1 = Rabbit(3)
-r2 = Rabbit(4)
-r3 = Rabbit(5)
+# print("\n---- rabbit tests ----")
+# print("---- testing creating rabbits ----")
+# r1 = Rabbit(3)
+# r2 = Rabbit(4)
+# r3 = Rabbit(5)
 # print("r1:", r1)
 # print("r2:", r2)
 # print("r3:", r3)
 # print("r1 parent1:", r1.get_parent1())
 # print("r1 parent2:", r1.get_parent2())
 
-# # print("---- testing rabbit addition ----")
-r4 = r1+r2   # r1.__add__(r2)
+# print("---- testing rabbit addition ----")
+# r4 = r1+r2   # r1.__add__(r2)
 # print("r1:", r1)
 # print("r2:", r2)
 # print("r4:", r4)
 # print("r4 parent1:", r4.get_parent1())
 # print("r4 parent2:", r4.get_parent2())
 
-# # print("---- testing rabbit equality ----")
-r5 = r3+r4
-r6 = r4+r3
+# print("---- testing rabbit equality ----")
+# r5 = r3+r4
+# r6 = r4+r3
 # print("r3:", r3)
 # print("r4:", r4)
 # print("r5:", r5)
@@ -359,32 +365,48 @@ class Employee(Person):
     """ An Employee contains an extra data attribute, salary as an int """
     def __init__(self, name, age):
         """ initializes self as a Person with a salary data attribute, initially 0 """
-        pass
+        Person.__init__(self, name, age)
+        self.salary = 0
+        self.past_salaries = [self.salary]
     def get_salary(self):
         """ returns self's salary """
-        pass
-    def set_salary(self, s):
+        return self.salary
+    def set_salary(self, s: int):
         """ s is an int
         Sets self's salary data attribute to s """
-        pass
+        previous_salary = self.salary
+        if previous_salary != s:
+            self.salary = s
+            self.past_salaries.append(self.salary)
     def salary_change(self, n):
         """ n is an int (positive or negative)
         Adds n to self's salary. If the result is negative, sets 
         self's salary to 0. Otherwise sets self's salary to the new value. """
-        pass
+        previous_salary = self.salary
+        new_salary = self.get_salary() + n
+        if new_salary < 0:
+            self.set_salary(0)
+        else:
+            self.set_salary(new_salary)
     def has_friends(self):
         """ Returns True if self's friend list is empty and False otherwise """
-        pass    
+        return len(self.get_friends()) == 0
     def past_salaries_list(self):
         """ Keeps track of all salaries self has had in the order they've changed. 
         i.e. whenever the salary changes, keep track of it.
         Hint: you may need to add an additional data attribute to Employee.
         Returns a copy of the list of all salaries self has had, in order. """
-        pass
+        return self.past_salaries.copy()
     def past_salary_freq(self):
         """ Returns a dictionary where the key is a salary number and the 
         value is how many times self's salary has changed to that number. """
-        pass
+        salaries = {}
+        for salary in self.past_salaries:
+            if salary in salaries:
+                salaries[salary] += 1
+            else:
+                salaries[salary] = 1
+        return salaries
 
 # # For example:
 # e = Employee("ana", 35)
@@ -403,13 +425,22 @@ class Employee(Person):
 
 
 # Write a function that meets this specification
-def counts(L):
+def counts(L: list[Person | Employee]):
     """ L is a list of Employee and Person objects 
     Returns a tuple of a count of:
       * how many Person objects are in L
       * how many Employee objects are in L 
       * the number of unique names among Employee and Person objects """
-    pass
+    count_person = 0
+    count_employee = 0
+
+    for object in L:
+        if isinstance(object, Employee):
+            count_employee += 1
+        else:
+            count_person += 1
+    names = [object.get_name() for object in L]
+    return count_person, count_employee, len(set(names))
 
 # For example:
 # make employees and people
