@@ -45,7 +45,8 @@ origin = Coordinate(0,0)
 # If either are not these types, raise a ValueError.
 class Circle(object):
     def __init__(self, center, radius):
-
+        if not (isinstance(center, Coordinate) and isinstance(radius, int)):
+            raise ValueError(f"Wrong arguments\n type of center: {type(center)}\n type of radius: {type(radius)}")
         self.center = center
         self.radius = radius
         
@@ -128,18 +129,20 @@ f2 = SimpleFraction(1, 4)
 # Implement the missing get_inverse and invert methods below
 class SimpleFraction(object):
     """ A number represented as a fraction """
-    def __init__(self, num, denom):
+    def __init__(self, num: int, denom: int):
         """ num and denom are integers """
-        self.num = num
-        self.denom = denom
-    def get_inverse(self):
+        self.num: int = num
+        self.denom: int = denom
+    def get_inverse(self) -> float:
         """ Returns a float representing 1/self """
-        # your code here
+        if self.num == 0:
+            raise ValueError("0 does not have an inverse.")
+        return self.denom/self.num
         
     def invert(self):
         """ Sets self's numerator to its denominator and vice versa.
             Returns None. """
-        # your code here
+        self.num, self.denom = self.denom, self.num
         
         
 # f1 = SimpleFraction(3,4)
@@ -253,12 +256,13 @@ class Fraction(object):
         self.denom = denom
     def __str__(self):
         """ Returns a string representation of self """
-        # modify this
+        if self.denom == 1:
+            return str(self.num)
         return str(self.num) + "/" + str(self.denom)
 
  
-a = Fraction(1,4)
-b = Fraction(3,1)
+# a = Fraction(1,4)
+# b = Fraction(3,1)
 # print(a)     # prints 1/4
 # print(b)     # prints 3
 
@@ -280,7 +284,7 @@ class Fraction(object):
             return None
         elif self.denom == 1:
             # modify this
-            return self.num
+            return Fraction(self.num, self.denom)
         else:
             greatest_common_divisor = gcd(self.num, self.denom)
             top = int(self.num/greatest_common_divisor)
@@ -402,11 +406,49 @@ class Fraction(object):
 #Question 1.
 # Add a method to the Circle class that allows you to print a Circle object
 # (you decide how to best represent it!)
+class Circle(object):
+    def __init__(self, center, radius):
+        if type(center) == Coordinate and type(radius) == int:
+            self.center = center
+            self.radius = radius
+        else:
+            raise ValueError
+    def __str__(self):
+        return f"Circle with center: {self.center} and radius: {self.radius}"
 
 #Question 2.
 # Implement a method in Fraction class such that the operator ** works
 #print(a**b) # works after you define it on two Fraction objects
+class Fraction(object):
+    def __init__(self, num, denom):
+        """ num and denom are integers """
+        if denom == 0:
+            raise ValueError("denominator cannot be 0")
+        self.num = num
+        self.denom = denom
 
+    def reduce(self):
+        def gcd(n, d):
+            while d != 0:
+                (d, n) = (n%d, d)
+            return n
+        if self.denom == 0:
+            return None
+        elif self.denom == 1:
+            # modify this
+            return Fraction(self.num,1)
+        else:
+            greatest_common_divisor = gcd(self.num, self.denom)
+            top = int(self.num/greatest_common_divisor)
+            bottom = int(self.denom/greatest_common_divisor)
+            return Fraction(top, bottom)
+    def __str__(self):
+        """ Returns a string representation of self """
+        return str(self.num) + "/" + str(self.denom)
+    def __float__(self):
+        return self.num / self.denom
+    def __pow__(self, other: Fraction) -> float:
+        return float(self) ** float(other)
 
 ###########################################################
 ############# ANSWERS TO AT HOME ###################
@@ -443,6 +485,6 @@ class Fraction(object):
 #     def __pow__(self, other):
 #         return float(self)**float(other)
     
-# f1 = Fraction(4,1)
-# f2 = Fraction(1,2)
-# print(f1**f2)    # prints 2.0
+f1 = Fraction(4,1)
+f2 = Fraction(1,2)
+print(f1**f2)    # prints 2.0
