@@ -64,7 +64,7 @@ WORDLIST_FILENAME = 'words.txt'
 ### END HELPER CODE ###
 
 
-def decrypt_message_try_pads(ciphertext, pads) -> str:
+def decrypt_message_try_pads(ciphertext: ps4b.EncryptedMessage, pads) -> ps4b.PlaintextMessage:
     '''
     Given a string ciphertext and a list of possible pads
     used to create it find the pad used to create the ciphertext
@@ -80,14 +80,23 @@ def decrypt_message_try_pads(ciphertext, pads) -> str:
 
     Returns: (PlaintextMessage) A message with the decrypted ciphertext and the best pad
     '''
-    decrypt_message = ""
-    decrypt_messages = [pad for pad in pads]
+    deciphered_messages = []
+    word_list = load_words(WORDLIST_FILENAME)
+    pad_count = 0
     for pad in pads:
+        pad_count += 1
+        deciphered_message = ciphertext.decrypt_message(pad)
+        text: str = deciphered_message.get_text()
+        count_words = 0
+        for word in text.split(" "):
+            if is_word(word_list, word):
+                count_words += 1
+        deciphered_messages.append((count_words, pad_count, text, pad))
+    deciphered_messages.sort(reverse= True)
+    return ps4b.PlaintextMessage(deciphered_messages[0][2], deciphered_messages[0][3])
 
-    return decrypt_message
 
-
-def decode_story():
+def decode_story() -> str:
     '''
     Write your code here to decode Bob's story using a list of possible pads
     Hint: use the helper functions get_story_string and get_story_pads and your EncryptedMessage class.
@@ -95,12 +104,14 @@ def decode_story():
     Returns: (string) the decoded story
 
     '''
-    raise NotImplementedError  # delete this line and replace with your code here
-
-
+    story = get_story_string()
+    encrypted_message = ps4b.EncryptedMessage(story)
+    pads = get_story_pads()
+    plaintext = decrypt_message_try_pads(encrypted_message, pads)
+    return plaintext.get_text()
 
 if __name__ == '__main__':
     # # Uncomment these lines to try running decode_story()
-    # story = decode_story()
-    # print("Decoded story: ", story)
+    story = decode_story()
+    print("Decoded story: ", story)
     pass
