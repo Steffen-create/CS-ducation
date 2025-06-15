@@ -15,7 +15,7 @@ class Message(object):
         a Message object has one attribute:
             the message text
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        self.message_text = input_text
 
     def __repr__(self):
         '''
@@ -32,9 +32,9 @@ class Message(object):
 
         Returns: (string) the message text
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        return self.message_text
 
-    def shift_char(self, char, shift):
+    def shift_char(self, char: str, shift: int) -> str:
         '''
         Used to shift a character as described in the pset handout
 
@@ -44,9 +44,20 @@ class Message(object):
 
         Returns: (string) the shifted character with ASCII value in the range [32, 126]
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        ascii_bottom = 32
+        ascii_top = 126
+        value_char = ord(char)
+        assert ascii_bottom <= value_char <= ascii_top, "Range for ascii are wrong"
 
-    def apply_pad(self, pad):
+        modulo = ascii_top - ascii_bottom + 1
+        value_offset = value_char - ascii_bottom
+        value_shifted = (value_offset + shift) % modulo #have to wrap around
+        value_char_shifted = value_shifted + ascii_bottom
+
+        shifted_char = chr(value_char_shifted)
+        return shifted_char
+
+    def apply_pad(self, pad: list[int]) -> str:
         '''
         Used to calculate the ciphertext produced by applying a one time pad to the message text.
         For each character in the text at index i shift that character by
@@ -57,11 +68,17 @@ class Message(object):
 
         Returns: (string) The ciphertext produced using the one time pad
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        cipher_text = ""
+        # assert len(self.message_text) > len(pad), "pad is shorter than message_text"
+        for i in range(len(self.message_text)):
+            char = self.message_text[i]
+            shift = pad[i]
+            cipher_text += self.shift_char(char, shift)
+        return cipher_text 
 
 
 class PlaintextMessage(Message):
-    def __init__(self, input_text, pad=None):
+    def __init__(self, input_text, pad: list | None =None):
         '''
         Initializes a PlaintextMessage object.
 
@@ -75,7 +92,12 @@ class PlaintextMessage(Message):
                 or generated randomly using self.generate_pad() if pad is None)
             the ciphertext (string, input_text encrypted using the pad)
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        super().__init__(input_text)
+        if pad == None:
+            self.pad = self.generate_pad()
+        else:
+            self.pad = pad.copy()
+        self.cipher_text = self.apply_pad(self.pad)
 
     def __repr__(self):
         '''
@@ -96,7 +118,11 @@ class PlaintextMessage(Message):
 
         Returns: (list of integers) the new one time pad
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        pad = []
+        for i in range(len(self.message_text)):
+            pad.append(random.randint(0, 109))
+        return pad
+
 
     def get_pad(self):
         '''
@@ -104,7 +130,7 @@ class PlaintextMessage(Message):
 
         Returns: (list of integers) a COPY of your pad
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        return self.pad.copy()
 
     def get_ciphertext(self):
         '''
@@ -112,7 +138,7 @@ class PlaintextMessage(Message):
 
         Returns: (string) the ciphertext
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        return self.cipher_text
 
     def change_pad(self, new_pad):
         '''
@@ -124,7 +150,8 @@ class PlaintextMessage(Message):
 
         Returns: nothing
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        self.pad = new_pad.copy()
+        self.cipher_text = self.apply_pad(self.pad)
 
 
 class EncryptedMessage(Message):
@@ -137,7 +164,7 @@ class EncryptedMessage(Message):
         an EncryptedMessage object inherits from Message. It has one attribute:
             the message text (ciphertext)
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        super().__init__(input_text)
 
     def __repr__(self):
         '''
@@ -157,4 +184,13 @@ class EncryptedMessage(Message):
 
         Returns: (PlaintextMessage) the decrypted message (containing the pad)
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        reverse_pad = [-i for i in pad]
+        decrypt_message = self.apply_pad(reverse_pad)
+        return PlaintextMessage(decrypt_message)
+
+if __name__ == "__main__":
+    message_text = " "
+    myclass = Message(message_text)
+    # print(f"get_text: {myclass.get_text()}")
+    print(myclass.shift_char(" ", -1))
+    print(ord("~"))

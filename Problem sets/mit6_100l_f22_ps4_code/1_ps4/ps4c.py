@@ -64,7 +64,7 @@ WORDLIST_FILENAME = 'words.txt'
 ### END HELPER CODE ###
 
 
-def decrypt_message_try_pads(ciphertext, pads):
+def decrypt_message_try_pads(ciphertext, pads) -> str:
     '''
     Given a string ciphertext and a list of possible pads
     used to create it find the pad used to create the ciphertext
@@ -80,7 +80,11 @@ def decrypt_message_try_pads(ciphertext, pads):
 
     Returns: (PlaintextMessage) A message with the decrypted ciphertext and the best pad
     '''
-    raise NotImplementedError  # delete this line and replace with your code here
+    decrypt_message = ""
+    decrypt_messages = [pad for pad in pads]
+    for pad in pads:
+
+    return decrypt_message
 
 
 def decode_story():
