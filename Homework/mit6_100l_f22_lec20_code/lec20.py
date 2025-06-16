@@ -196,14 +196,15 @@ end = '9/30/2021 1:45 PM'
 # from Jan 1 2021 at 3:30 PM until 4 PM. 
 # You want to estimate the calories from this workout. 
 # Print the number of calories for w_one.
-pass
+w_one= Workout('jan 1 2021 3:30 PM', 'jan 1 2021 4 PM')
+print(w_one.get_calories())
 
 # Create another Workout object saved as w_two, 
 # from Jan 1 2021 at 3:35 PM until 4 PM. 
 # You know you burned 300 calories for this workout.  
 # Print the number of calories for w_two. 
-pass
-
+w_two = Workout("01/01/2021 3:35 PM", "01/01/2021 4 PM", 300)
+print(w_two.get_calories())
 #############################################
 
 
