@@ -437,22 +437,26 @@ rw3 = RunWorkout('9/30/2021 1:35 PM','9/30/2021 3:05 PM', 100)
 #######################################################
 ############## AT HOME ####################
 #######################################################
-def total_elapsed_time(L):
+import datetime
+def total_elapsed_time(L: list[tuple[str, str]]) -> float:
     """ L is a list of tuples (e1, e2) where:
         e1 and e2 are strings representing a date and time. e.g. '9/30/2021 1:35 PM'
         e2 occurs later in time than e1
     Consider the elapsed time for a tuple to be the difference between e2 and e1.
     Returns the sum of all the elapsed times, in seconds, in L. """
-    pass
-    
-# t1 = '1/1/2021 2:00 PM'
-# t2 = '1/1/2021 2:05 PM'
-# t3 = '3/12/2021 1:22 PM'
-# t4 = '3/12/2021 1:32 PM'
-# t5 = '7/13/2021 6:00 PM'
-# t6 = '7/13/2021 6:02 PM'
-# L = [(t1, t2), (t3, t4), (t5, t6)]  # 5min + 10min + 2min = 1020 sec
-# print(total_elapsed_time(L))    # prints 1020
+    new_list: list[datetime.timedelta] = [parser.parse(x[1]) - parser.parse(x[0]) for x in L]
+    total_time = datetime.timedelta()
+    for time in new_list:
+        total_time += time
+    return total_time.seconds
+t1 = '1/1/2021 2:00 PM'
+t2 = '1/1/2021 2:05 PM'
+t3 = '3/12/2021 1:22 PM'
+t4 = '3/12/2021 1:32 PM'
+t5 = '7/13/2021 6:00 PM'
+t6 = '7/13/2021 6:02 PM'
+L = [(t1, t2), (t3, t4), (t5, t6)]  # 5min + 10min + 2min = 1020 sec
+print(total_elapsed_time(L))    # prints 1020
     
 #############################################
 
