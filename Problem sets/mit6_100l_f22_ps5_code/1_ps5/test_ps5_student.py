@@ -2,7 +2,7 @@ import sys
 import unittest
 import ps5
 import pickle
-from PIL import ImageChops
+from PIL import ImageChops, Image
 
 class TestPS5(unittest.TestCase):
     # this is a helper to save hidden images for the tester to use to validate
@@ -18,6 +18,17 @@ class TestPS5(unittest.TestCase):
         f.close()
         
     def are_imgs_equal(self, im1, im2):
+        # image = Image.new("RGB", (600,398), (0,0,0))
+        # image = ImageChops.difference(im1, image)
+        # print(f"image ref: {list(image.getdata())[20000:20100]}")
+        # # image.show()
+        # data2 = list(im1.getdata())
+        # data = list(image.getdata())
+        # for i in range(len(data)):
+        #     j = data[i]
+        #     if j != data2[i]:
+        #         print(f"ref: {j}")
+        #         print(f"ori: {data2[i]}")
         return ImageChops.difference(im1, im2).getbbox() is None
     
     def help_check_hidden_img(self, pkl_file_name, student_img):
@@ -101,7 +112,7 @@ class Results_600(unittest.TextTestResult):
 
     def getPoints(self):
         return round(self.points, 2)
-
+ 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestPS5))

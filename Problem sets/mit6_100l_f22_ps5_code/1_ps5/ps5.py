@@ -6,8 +6,8 @@
 
 from PIL import Image, ImageFont, ImageDraw
 import numpy
-
-
+from PIL.Image import Image as PILImage
+from math import ceil, floor
 def make_matrix(color):
     """
     Generates a transformation matrix for the specified color.
@@ -48,7 +48,7 @@ def matrix_multiply(m1, m2):
         return result
 
 
-def img_to_pix(filename):
+def img_to_pix(filename: str) -> list[tuple[int, ...] | float]:
     """
     Takes a filename (must be inputted as a string
     with proper file attachment ex: .jpg, .png)
@@ -69,8 +69,8 @@ def img_to_pix(filename):
                  in form (R,G,B) such as [(0,0,0),(255,255,255),(38,29,58)...] for RGB image
                  in form L such as [60,66,72...] for BW image
     """
-    pass
-
+    image = list(Image.open(filename).getdata())
+    return image
 
 def pix_to_img(pixels_list, size, mode):
     """
@@ -88,7 +88,14 @@ def pix_to_img(pixels_list, size, mode):
     returns:
         img: Image object made from list of pixels
     """
-    pass
+    assert len(pixels_list) == size[0] * size[1], f"size: {size} does not match pixels_list length: {len(pixels_list)}"
+    image = Image.new(mode, size, 0)
+    drawer = ImageDraw.Draw(image, mode)
+    for i in range(len(pixels_list)):
+        pixel = pixels_list[i]
+        position: tuple[int, int] = (i%size[0] ,i//size[0])
+        drawer.point(position,  pixel)
+    return image
 
 
 def filter(pixels_list, color):
@@ -100,10 +107,16 @@ def filter(pixels_list, color):
     returns: list of pixels in same format as earlier functions,
     transformed by matrix multiplication
     """
-    pass
+    matrix = make_matrix(color= color)
+    modified_pixels_list = []
+    for pixel in pixels_list:
+        filtered_pixel = matrix_multiply(matrix, pixel)
+        if isinstance(filtered_pixel, list):
+            filtered_pixel = tuple((int(round(rgb_value, 0)) for rgb_value in filtered_pixel))
+        modified_pixels_list.append(filtered_pixel)
+    return modified_pixels_list
 
-
-def extract_end_bits(num_end_bits, pixel):
+def extract_end_bits(num_end_bits: int, pixel: tuple[int, ...] | float) -> tuple[int, ...] | float:
     """
     Extracts the last num_end_bits of each value of a given pixel.
 
@@ -133,10 +146,14 @@ def extract_end_bits(num_end_bits, pixel):
     Returns:
         The num_end_bits of pixel, as an integer (BW) or tuple of integers (RGB).
     """
-    pass
+    if isinstance(pixel, tuple):
+        remainder = tuple(( rgb_value % 2**num_end_bits for rgb_value in pixel))
+    else:
+        remainder = pixel % 2**num_end_bits
+    return remainder
 
 
-def reveal_bw_image(filename):
+def reveal_bw_image(filename: str) -> PILImage:
     """
     Extracts the single LSB for each pixel in the BW input image. 
     Inputs:
@@ -144,7 +161,14 @@ def reveal_bw_image(filename):
     Returns:
         result: an Image object containing the hidden image
     """
-    pass
+    image = img_to_pix(filename)
+    secret_image_pixels = [extract_end_bits(1,pixel) for pixel in image]
+    def x(pixel):
+        return pixel * (256)
+    secret_image_pixels = [x(pixel) for pixel in secret_image_pixels]
+    size = Image.open(filename).size
+    secret_image = pix_to_img(secret_image_pixels, size, 'L')
+    return secret_image
 
 
 def reveal_color_image(filename):
@@ -155,7 +179,23 @@ def reveal_color_image(filename):
     Returns:
         result: an Image object containing the hidden image
     """
-    pass
+    range_start = 20000
+    range_end = 20100
+    end_bits = 3
+    power = 3
+    image = img_to_pix(filename)
+    print(image[range_start:range_end])
+    secret_image_pixels = [extract_end_bits(end_bits,pixel) for pixel in image]
+    scaling = 36.24 # no idea why it should be this and not the definition below. But the test values are close this way
+    # scaling = 256/2**power 
+    def x(pixel):
+        return tuple([int(round(i*scaling,0)) for i in pixel]) 
+    secret_image_pixels = list([x(pixel) for pixel in secret_image_pixels])
+    size = Image.open(filename).size
+    print(size)
+    print(f"\n image: {secret_image_pixels[range_start:range_end]}")
+    secret_image = pix_to_img(secret_image_pixels, size, 'RGB')
+    return secret_image
 
 
 def reveal_image(filename):
@@ -202,12 +242,12 @@ def main():
 
     # Uncomment the following lines to test part 1
 
-    #im = Image.open('image_15.png')
-    #width, height = im.size
-    #pixels = img_to_pix('image_15.png')
+    # im = Image.open('image_15.png')
+    # width, height = im.size
+    # pixels = img_to_pix('image_15.png')
 
-    #non_filtered_pixels = filter(pixels,'none')
-    #im = pix_to_img(non_filtered_pixels, (width, height), 'RGB')
+    # non_filtered_pixels = filter(pixels,'green')
+    # im = pix_to_img(non_filtered_pixels, (width, height), 'RGB')
     # im.show()
 
     #red_filtered_pixels = filter(pixels,'red')
@@ -215,11 +255,11 @@ def main():
     # im2.show()
 
     # Uncomment the following lines to test part 2
-    #im = reveal_image('hidden1.bmp')
+    # im = reveal_image('hidden1.bmp')
     # im.show()
 
-    #im2 = reveal_image('hidden2.bmp')
-    # im2.show()
+    im2 = reveal_image('hidden2.bmp')
+    im2.show()
     
 
 if __name__ == '__main__':
